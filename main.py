@@ -174,7 +174,7 @@ def update_recent_trades():
         for trade in new_trades:
             trade_data = json.dumps(trade)  # Serialize the trade object to JSON string
             for subscription in subscriptions:
-                print(f"sending trade: {trade["Senator"]} to subscription: {subscription}")
+                print(f"sending trade: {trade['Senator']} to subscription: {subscription}")
                 try:
                     webpush(
                         subscription,
