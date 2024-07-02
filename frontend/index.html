@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Notified About Insider Trades</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .main {
+            background: #1e1e1e;
+            padding: 2em;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 1.75em;
+            margin-bottom: 1em;
+        }
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1em;
+            margin-bottom: 1em;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 1em;
+            border: none;
+            border-radius: 5px;
+            background: #2b2b2b;
+            color: #ffffff;
+            font-size: 1em;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        input[type="email"]::placeholder {
+            color: #bbbbbb;
+        }
+        button {
+            padding: 1em 1.5em;
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #3700b3;
+        }
+        #recent_trades {
+            margin-top: 2em;
+        }
+        .small-text{
+            color: grey;
+            font-size: 0.8em;
+        }
+        .trade{
+            margin: 0em 0em 2em 0em;
+            background: #121212;
+            padding: 0.5em;
+            border-radius: 1em;
+            box-shadow: 1em 1em 1em rgba(0, 0, 0, 0.5); /* Added box shadow */
+        }
+        .senatorName{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div>
+            <h1>Get notifications when insider trades happen</h1>
+            <div class="input-container">
+                <input id="emailField" type="email" name="email" placeholder="Enter your email">
+                <button id="emailSubmit">Submit</button>
+            </div>
+        </div>
+        <p class="small-text">How it works:</p>
+        <p class="small-text">Every day, we check for new trades by members of the senate. When we find new trades, you get a notification on your device.</p>
+        <div id="recent_trades">
+            <h1>Recent trades:</h1>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
