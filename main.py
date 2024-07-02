@@ -42,7 +42,7 @@ class QuiverQuantitativeAPI:
                 time.sleep(5)
                 print("Trying again...")
             
-
+"""
 class CongressAPI:
     BASE_URL = "https://api.congress.gov/v3"
 
@@ -61,7 +61,7 @@ class CongressAPI:
         return response.json()
     
     def congress_members(self, limit=250):
-        """Gets a list of members in congress"""
+        # Gets a list of members in congress
         endpoint = "member"
         return self._make_request(endpoint, {"limit": limit})
     
@@ -100,6 +100,8 @@ class CongressAPI:
     def direct_request(self, url):
         return requests.get(url + f"&api_key={self.api_key}").json()
 
+"""
+
 with open("vapid/vapid.json") as fd:
     data = json.load(fd)
     vapid_private_key = data["privateKey"]
@@ -111,7 +113,7 @@ with open("backend/subscriptions.json") as fd:
  
 app = Flask(__name__)
 quiver = QuiverQuantitativeAPI("abb7d18db8cb4533da6920daa12385bba6a6c5ad")
-congress = CongressAPI("unr6zNM1GeAQ67kiHFlzYW72mQfHfZ8M5odCcCLa")
+#congress = CongressAPI("unr6zNM1GeAQ67kiHFlzYW72mQfHfZ8M5odCcCLa")
 
 # Public files
 @app.route("/")
