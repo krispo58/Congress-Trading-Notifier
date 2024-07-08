@@ -19,11 +19,12 @@
         .main {
             background: #1e1e1e;
             padding: 2em;
+            margin: 5em 0 0 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             border-radius: 10px;
             text-align: center;
+            height: 100%;
             max-width: 400px;
-            width: 100%;
             animation: fadeIn 1s ease-in-out;
         }
         @keyframes fadeIn {
@@ -70,6 +71,8 @@
         }
         #recent_trades {
             margin-top: 2em;
+            max-height: 10em;
+            overflow: scroll;
         }
         .small-text{
             color: grey;
@@ -85,11 +88,16 @@
         .senatorName{
             font-weight: bold;
         }
+        #logo{
+            border-radius: 10px;
+
+        }
     </style>
 </head>
 <body>
     <div class="main">
         <div>
+            <img src="DollarFinanceLogo.png" width="100px" id="logo">
             <h1>Get notifications when insider trades happen</h1>
             <div class="input-container">
                 <input id="emailField" type="email" name="email" placeholder="Enter your email">
@@ -98,8 +106,8 @@
         </div>
         <p class="small-text">How it works:</p>
         <p class="small-text">Every day, we check for new trades by members of the senate. When we find new trades, you get a notification on your device.</p>
+        <h1>Recent trades:</h1>
         <div id="recent_trades">
-            <h1>Recent trades:</h1>
         </div>
     </div>
     <script src="main.js"></script>

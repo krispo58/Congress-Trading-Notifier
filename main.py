@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, send_file
 import requests
 import json
 from pywebpush import webpush
@@ -118,13 +118,15 @@ quiver = QuiverQuantitativeAPI("abb7d18db8cb4533da6920daa12385bba6a6c5ad")
 # Public files
 @app.route("/")
 def index():
-    return open("frontend/index.html", "r").read()
-    #return Response(files["index.html"], content_type="text/html")
+    return Response(files["index.html"], content_type="text/html")
 
 @app.route("/main.js")
 def mainjs():
-    return open("frontend/main.js", "r").read()
-    #return Response(files["main.js"], content_type="application/javascript")
+    return Response(files["main.js"], content_type="application/javascript")
+
+@app.route("/DollarFinanceLogo.png")
+def logo():
+    return send_file("frontend/DollarFinanceLogo.png")
 
 @app.route("/service_worker.js")
 def service_worker():
