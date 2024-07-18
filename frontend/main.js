@@ -77,7 +77,7 @@ async function start(){
     const response = await fetch("/backend/recenttrades")
     const trades = await response.json()
     console.log(trades)
-    for(let i = 0; i < 4; i++){
+    for(let i = 0; i < 10; i++){
         trades_div.innerHTML += "<div class=\"trade\"><span class=\"senatorName\">" + trades[i]["Senator"] + "</span> bought " + trades[i]["Range"] + " worth of " + trades[i]["Ticker"] + "</div>"
     }
 }
