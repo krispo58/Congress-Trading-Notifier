@@ -78,7 +78,7 @@ async function start(){
     const trades = await response.json()
     console.log(trades)
     for(let i = 0; i < 10; i++){
-        trades_div.innerHTML += "<div class=\"trade\"><span class=\"senatorName\">" + trades[i]["Senator"] + "</span> bought " + trades[i]["Range"] + " worth of " + trades[i]["Ticker"] + "</div>"
+        trades_div.innerHTML += "<div class=\"trade\"><span class=\"senatorName\">" + trades[i]["Senator"] + "</span> bought " + trades[i]["Range"] + " worth of " + trades[i]["Ticker"] + "<span style=\"color: grey;\">" + trades[i]["Date"] + "</span>" + "</div>"
     }
 }
 
