@@ -250,4 +250,4 @@ def symmetric_difference(a: list, b: list):
 
 update_recent_trades()
 cache_files()
-app.run(host="0.0.0.0")
+app.run(host="0.0.0.0", port=443)
