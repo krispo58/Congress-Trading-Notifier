@@ -96,6 +96,10 @@ async function getNotificationPermission(){
 
 async function sendEmail(){
   const email = document.getElementById("emailField").value
+  if (email.length < 5){
+    alert("Please enter your email")
+    return
+  }
   const response = await fetch("/backend/subscribeemail", {
     method: "POST",
     body: JSON.stringify({"email": email}),
