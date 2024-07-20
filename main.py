@@ -250,4 +250,6 @@ def symmetric_difference(a: list, b: list):
 
 update_recent_trades()
 cache_files()
-app.run(host="0.0.0.0", port=443)
+
+if __name__ == "__main__":
+    app.run()
