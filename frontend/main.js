@@ -18,8 +18,6 @@ function urlB64ToUint8Array(base64String) {
 }
 
 function updateSubscriptionOnServer(subscription, apiEndpoint) {
-  // TODO: Send subscription to application server
-
   return fetch(apiEndpoint, {
     method: 'POST',
     headers: {
@@ -29,21 +27,18 @@ function updateSubscriptionOnServer(subscription, apiEndpoint) {
       subscription_json: JSON.stringify(subscription)
     })
   });
-
 }
 
 function subscribeUser(swRegistration, applicationServerPublicKey, apiEndpoint) {
   const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-  navigator.serviceWorker.ready.then(function(swReg){
+  navigator.serviceWorker.ready.then(function(swReg) {
     swRegistration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: applicationServerKey
     })
     .then(function(subscription) {
       console.log('User is subscribed.');
-  
       return updateSubscriptionOnServer(subscription, apiEndpoint);
-  
     })
     .then(function(response) {
       if (!response.ok) {
@@ -51,10 +46,10 @@ function subscribeUser(swRegistration, applicationServerPublicKey, apiEndpoint) 
       }
       return response.json();
     });
-  })
+  });
 }
 
-function registerServiceWorker(serviceWorkerUrl, applicationServerPublicKey, apiEndpoint){
+function registerServiceWorker(serviceWorkerUrl, applicationServerPublicKey, apiEndpoint) {
   let swRegistration = null;
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     console.log('Service Worker and Push is supported');
@@ -72,52 +67,60 @@ function registerServiceWorker(serviceWorkerUrl, applicationServerPublicKey, api
   return swRegistration;
 }
 
-async function start(){
-    const trades_div = document.getElementById("recent_trades")
-    const response = await fetch("/backend/recenttrades")
-    const trades = await response.json()
-    console.log(trades)
-    for(let i = 0; i < 5; i++){
-        trades_div.innerHTML += "<div class=\"trade\"><span class=\"senatorName\">" + trades[i]["Senator"] + "</span> bought " + trades[i]["Range"] + " worth of " + trades[i]["Ticker"] + "<span style=\"color: grey;\"> (" + trades[i]["Date"] + ")</span>" + "</div>"
+async function start() {
+    const trades_div = document.getElementById("recent_trades");
+    const response = await fetch("/backend/recenttrades");
+    const trades = await response.json();
+    console.log(trades);
+    for (let i = 0; i < trades.length && i < 5; i++) {
+        const trade = trades[i];
+        const tradeElement = document.createElement("div");
+        tradeElement.className = "trade";
+        tradeElement.innerHTML = `
+            <div class="senatorName">${trade.Representative}</div>
+            <div class="tradeDetail">${trade.Transaction} of Ticker ${trade.Ticker} worth ${trade.Range}</div>
+            <div class="tradeDate">Transaction Date: ${trade.TransactionDate} Report Date: ${trade.ReportDate}</div>
+        `;
+        trades_div.appendChild(tradeElement);
     }
 }
 
-async function getNotificationPermission(){
-    let permission = await Notification.requestPermission()
-    console.log(permission)
-    if(permission == "granted"){
-      registerServiceWorker("service_worker.js", PUBLIC_VAPID_KEY, "/backend/pushsubscriptions")
-    }
-    else{
-      alert("You need to accept notifications so we can send you notifications. Please try again")
-      getNotificationPermission()
+async function getNotificationPermission() {
+    let permission = await Notification.requestPermission();
+    console.log(permission);
+    if (permission == "granted") {
+        registerServiceWorker("service_worker.js", PUBLIC_VAPID_KEY, "/backend/pushsubscriptions");
+    } else {
+        alert("You need to accept notifications so we can send you notifications.");
+        getNotificationPermission();
     }
 }
 
-async function sendEmail(){
-  const email = document.getElementById("emailField").value
-  if (email.length < 5){
-    alert("Please enter your email")
-    return
-  }
-  const response = await fetch("/backend/subscribeemail", {
-    method: "POST",
-    body: JSON.stringify({"email": email}),
-    headers: {
-      "Content-Type": "application/json"
+async function sendEmail() {
+    const email = document.getElementById("emailField").value;
+    if (email.length < 5) {
+        alert("Please enter your email");
+        return;
     }
-  })
-  const data = await response.json()
-  if (data["success"] = true){
-    console.log("success")
-    document.getElementsByClassName("input-container")[0].innerHTML += "<div style=\"color: green;\">Success! You can now close the page.</div>"
-  }
+    const response = await fetch("/backend/subscribeemail", {
+        method: "POST",
+        body: JSON.stringify({"email": email}),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    const data = await response.json();
+    if (data.success) {
+        console.log("success");
+        const successMessage = document.getElementById("successMessage");
+        successMessage.innerHTML = "Success! You can now close the page.";
+    }
 }
 
 // Add event listener to submit button
-document.getElementById("emailSubmit").addEventListener("click", function(){
-  sendEmail()
-  getNotificationPermission()
-})
+document.getElementById("emailSubmit").addEventListener("click", function() {
+    sendEmail();
+    getNotificationPermission();
+});
 
-start()
+start();

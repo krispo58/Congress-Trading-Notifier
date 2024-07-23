@@ -26,7 +26,7 @@
             max-width: 400px;
             height: 100%;
             animation: fadeIn 1s ease-in-out;
-            overflow: scroll;
+            overflow: auto;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.9); }
@@ -72,24 +72,40 @@
         }
         #recent_trades {
             margin-top: 2em;
-            overflow: scroll;
         }
-        .small-text{
+        .small-text {
             color: grey;
             font-size: 0.8em;
+            margin-bottom: 1em;
         }
-        .trade{
-            margin: 0em 0em 2em 0em;
-            background: #121212;
-            padding: 0.5em;
-            border-radius: 1em;
-            box-shadow: 1em 1em 1em rgba(0, 0, 0, 0.5); /* Added box shadow */
-        }
-        .senatorName{
-            font-weight: bold;
-        }
-        #logo{
+        .trade {
+            margin: 0 0 2em 0;
+            background: #2b2b2b;
+            padding: 1em;
             border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .senatorName {
+            font-weight: bold;
+            color: #bb86fc;
+        }
+        .tradeDetail {
+            margin-top: 0.5em;
+            color: #ffffff;
+        }
+        .tradeDate {
+            color: grey;
+        }
+        #logo {
+            border-radius: 10px;
+        }
+        .success-message {
+            color: green;
+            margin-top: 1em;
+        }
+        #nancy{
+            border-radius: 10px;
+            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
@@ -107,18 +123,19 @@
 <body>
     <div class="main">
         <div>
-            <img src="DollarFinanceLogo.png" width="100px" id="logo">
-            <h1>Get notifications when insider trades happen</h1>
+            <img src="DollarFinanceLogo.png" width="100px" id="logo" alt="Logo">
+            <h1>Get notifications when Nancy Pelosi makes a trade</h1>
             <div class="input-container">
                 <input id="emailField" type="email" name="email" placeholder="Enter your email">
                 <button id="emailSubmit">Submit</button>
             </div>
+            <div class="success-message" id="successMessage"></div>
         </div>
         <p class="small-text">How it works:</p>
-        <p class="small-text">Every day, we check for new trades by members of the senate. When we find new trades, you get a notification on your device.</p>
+        <p class="small-text">Every day, we check for new trades by Nancy Pelosi, and when they happen, we send you a notification.</p>
+        <img src="NancyPelosi.png" height="200" id="nancy">
         <h1>Recent trades:</h1>
-        <div id="recent_trades">
-        </div>
+        <div id="recent_trades"></div>
     </div>
     <script src="main.js"></script>
 </body>

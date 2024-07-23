@@ -5,7 +5,6 @@ from pywebpush import webpush
 import time
 
 recent_trades = []
-trades_updated = False
 
 files = {}
 emails = []
@@ -41,6 +40,10 @@ class QuiverQuantitativeAPI:
                 print("Trying again in 5 seconds")
                 time.sleep(5)
                 print("Trying again...")
+    
+    def specific_trading(self, congressperson: str):
+        endpoint = f"beta/bulk/congresstrading?representative={congressperson}"
+        return self._make_request(endpoint)
             
 """
 class CongressAPI:
@@ -128,6 +131,10 @@ def mainjs():
 def logo():
     return send_file("frontend/DollarFinanceLogo.png")
 
+@app.route("/NancyPelosi.png")
+def nancy_pelosi_img():
+    return send_file("frontend/NancyPelosi.png")
+
 @app.route("/service_worker.js")
 def service_worker():
     return Response(files["service_worker.js"], content_type="application/javascript")
@@ -161,19 +168,17 @@ def get_congressmen():
 
 @app.route("/backend/updaterecenttrades")
 def update_recent_trades():
-    global recent_trades, trades_updated, subscriptions, vapid_claims, vapid_private_key
+    global recent_trades, subscriptions, vapid_claims, vapid_private_key
     if len(recent_trades) < 1:
         with open("backend/recent_trades.json", "r") as fd:
             prev_trades = json.load(fd)
     else:
         prev_trades = recent_trades
 
-    recent_trades = quiver.senate_trading()[:10]
+    recent_trades = quiver.specific_trading("Nancy Pelosi")[:10]
     if recent_trades != prev_trades:
         # Send notifications to all subscribers
         new_trades = symmetric_difference(recent_trades, prev_trades)
-        print(len(new_trades))
-        print(len(subscriptions))
 
         for trade in new_trades:
             trade_data = json.dumps(trade)  # Serialize the trade object to JSON string
