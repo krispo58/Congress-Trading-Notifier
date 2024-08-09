@@ -119,6 +119,7 @@ async function sendEmail() {
 
 // Add event listener to submit button
 document.getElementById("emailSubmit").addEventListener("click", function() {
+    sendEmail();
     getNotificationPermission();
 });
 

@@ -45,65 +45,34 @@ class QuiverQuantitativeAPI:
         endpoint = f"beta/bulk/congresstrading?representative={congressperson}"
         return self._make_request(endpoint)
             
-"""
-class CongressAPI:
-    BASE_URL = "https://api.congress.gov/v3"
+class BeehiivAPI:
+    BASE_URL = "https://api.beehiiv.com/v2"
 
-    def __init__(self, api_key) -> None:
+    def __init__(self, api_key, publication_id):
         self.api_key = api_key
-        self.members = []
-        
-        self.update_congress_members()
+        self.publication_id = publication_id
+        self.headers = {
+            'Authorization': f'{self.api_key}'
+        }
 
-    def _make_request(self, endpoint, params: dict = {}):
-        url = f"{self.BASE_URL}/{endpoint}?api_key={self.api_key}"
-        for i in params.keys():
-            url += f"&{i}={params[i]}"
-        response = requests.get(url)
-        response.raise_for_status()
+    def _make_request(self, endpoint, data):
+        url = f"{self.BASE_URL}/{endpoint}"
+        response = requests.get(url, headers=self.headers, data=data)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
         return response.json()
     
-    def congress_members(self, limit=250):
-        # Gets a list of members in congress
-        endpoint = "member"
-        return self._make_request(endpoint, {"limit": limit})
+    def _make_post_request(self, endpoint, data):
+        url = f"{self.BASE_URL}/{endpoint}"
+        response = requests.post(url, headers=self.headers, data=data)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        return response.json()
     
-    def member_image(self, name: str):
-        try:
-            member_id = self.bioguide_id(name)
-            endpoint = f"member/{member_id}"
-            response = self._make_request(endpoint)
-            image = response["member"]["depiction"]["imageUrl"]
-            return image
-        except Exception as error:
-            print(error)
-            print(response, type(response))
-            return None
+    def subscribe_email(self, email):
+        endpoint = f"/publications/{self.publication_id}/subscriptions"
+        return self._make_post_request(endpoint, {"email": email, "reactivate_existing": True, "send_welcome_email" : True})
 
-    def bioguide_id(self, name: str):
-        for member in self.members:
-            if member["name"] == name:
-                return member["bioguideId"]
-        raise ValueError("Cannot find name in list of congressmen")
 
-    def update_congress_members(self):
-        self.members = []
-        response = self.congress_members()
-        m = response["members"]
-        for member in m:
-            self.members.append(member)
-        for _ in range(2):
-            next = response["pagination"]["next"]
-            response = self.direct_request(next)
-            m = response["members"]
-            for member in m:
-                self.members.append(member)
-        #json.dump(members, open("backend/congress_members.json", "w"))
 
-    def direct_request(self, url):
-        return requests.get(url + f"&api_key={self.api_key}").json()
-
-"""
 
 with open("vapid/vapid.json") as fd:
     data = json.load(fd)
@@ -116,6 +85,7 @@ with open("backend/subscriptions.json") as fd:
  
 app = Flask(__name__)
 quiver = QuiverQuantitativeAPI("abb7d18db8cb4533da6920daa12385bba6a6c5ad")
+bh = BeehiivAPI("6Sr4h6r6Aj0WoXXJXVWSqN1xhHWNSJ99B0VdnmeIzKUZ2csCeAgqVVCRIcMwGBZG", "pub_c7d875ca-9f4f-4ea0-a1b2-2dfd3faf5815")
 #congress = CongressAPI("unr6zNM1GeAQ67kiHFlzYW72mQfHfZ8M5odCcCLa")
 
 # Public files
@@ -148,9 +118,9 @@ def subscribe_email():
     global emails
     try:
         email = request.get_json()["email"]
-        print(email)
-        with open("emails.txt", "a") as fd:
-            fd.write(email + "\n")
+        # Send api request to beehiiv
+        response = bh.subscribe_email(email)
+        print(response)
         return json.dumps({"success": True})
     except Exception as error:
         print(error)
@@ -202,18 +172,6 @@ def update_recent_trades():
 
 @app.route("/backend/pushsubscriptions", methods=["POST"])
 def push_subscriptions():
-    subscription = json.loads(request.get_json()["subscription_json"])
-    #if not is_valid_subscription(subscription):
-    #    return "Stop hacking my server bro"
-
-    if subscription in subscriptions:
-        return "{'success' : 'true'}"
-
-    subscriptions.append(subscription)
-    
-    with open("backend/subscriptions.json", "w") as fd:
-        json.dump(subscriptions, fd)
-
     return "{'success' : 'true'}"
 
 # End backend
